@@ -16,7 +16,7 @@ Here's a simple example:
 
 .. code-block::
 
-    from configured_mail_sender import mail_sender
+    from configured_mail_sender.mail_sender import mail_sender
     from email.mime.text import MIMEText
 
     sender = mail_sender('sending-email@somedomain.com')
