@@ -7,7 +7,7 @@ Overview
 There are multitudinous Python packages for sending emails with widely
 varying interfaces. Some concentrate on constructing the email message,
 others concentrate on the delivery. But virtually all require the caller to
-have explicit knowledge of _how_ the email will be delivered. Typically the
+have explicit knowledge of `how` the email will be delivered. Typically the
 caller needs to know at least:
 
 * The address and port for the SMTP server. (The fact that servers

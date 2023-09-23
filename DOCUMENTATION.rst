@@ -1,5 +1,5 @@
 =============
-ConfiguredMailSender Documentation
+Configured Mail Sender Documentation
 =============
 
 ``configured_mail_sender`` makes it easy for a Python script to send emails on behalf of a user
@@ -73,11 +73,11 @@ potential outgoing domain, something like this:
 
 .. code-block:: yaml
 
-    yahoo.com:
-      protocol: smtp      # smtp is assumed
-      server: smtp.mail.yahoo.com
-      port: 587
-      security: STARTTLS
+yahoo.com:
+  protocol: smtp      # smtp is assumed
+  server: smtp.mail.yahoo.com
+  port: 587
+  security: STARTTLS
 
 protocol
     specifies the connection and authentication protocol used
@@ -151,7 +151,7 @@ from that email address.
 
 The credentials come from the first of:
 
-* A file given in the `creds_file` parameter to the ``mailsender()`` call.
+* A file given in the ``creds_file`` parameter to the ``mailsender()`` call.
 * A file named in the ``MAILSENDER_CREDS`` environment variable.
 * A file in the os-appropriate user directory as determined by
   `platformdirs <https://pypi.org/project/platformdirs/>`_ as follows:
@@ -159,10 +159,10 @@ The credentials come from the first of:
 .. code-block:: python
 
     import platformdirs
-
     dir = platformdirs.user_config_path('MailSender')
 
-Please consult ``platformdirs`` to see how that works for your environment.
+Please consult `platformdirs <https://pypi.org/project/platformdirs/>`_
+to see how that works for your environment.
 Because it contains sensitive information the ``mailsender_creds.yml`` file
 should be readable only by the user, but should be writable by the user
 because in some situations it may need to be updated. The directory itself
@@ -172,11 +172,11 @@ The ``mailsender_creds.yml`` has one entry for each outgoing email address
 with whatever is needed to authenticate with the email server. Each entry
 should be something like this:
 
-.. code-block:: yaml
+.. code_block:: yaml
 
-    itsreallyme@comcast.net:
-        password: password123456 # A really bad example
-        userid: itssortofme
+itsreallyme@comcast.net:
+    password: password123456 # A really bad example
+    userid: itssortofme
 
 userid
     By default the sending email address is assumed to be the userid to
