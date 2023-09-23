@@ -14,7 +14,7 @@ to send them.
 
 Here's a simple example:
 
-.. code-block:: python
+.. code-block::
 
     from configured_mail_sender import mail_sender
     from email.mime.text import MIMEText
@@ -71,14 +71,13 @@ parameters through to ``combine-settings``.
 The assembled domain configuration has a configuration for each
 potential outgoing domain, something like this:
 
-.. code-block:: yaml
+.. code-block::
 
     yahoo.com:
       protocol: smtp      # smtp is assumed
       server: smtp.mail.yahoo.com
       port: 587
       security: STARTTLS
-
 
 protocol
     specifies the connection and authentication protocol used
@@ -157,7 +156,7 @@ The credentials come from the first of:
 * A file in the os-appropriate user directory as determined by
   `platformdirs <https://pypi.org/project/platformdirs/>`_ as follows:
 
-.. code-block:: python
+.. code-block::
 
     import platformdirs
     dir = platformdirs.user_config_path('MailSender')
@@ -173,11 +172,11 @@ The ``mailsender_creds.yml`` has one entry for each outgoing email address
 with whatever is needed to authenticate with the email server. Each entry
 should be something like this:
 
-.. code_block:: yaml
+.. code-block::
 
-itsreallyme@comcast.net:
-    password: password123456 # A really bad example
-    userid: itssortofme
+    itsreallyme@comcast.net:
+        password: password123456 # A really bad example
+        userid: itssortofme
 
 userid
     By default the sending email address is assumed to be the userid to
