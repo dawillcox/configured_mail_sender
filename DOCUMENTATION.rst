@@ -73,11 +73,12 @@ potential outgoing domain, something like this:
 
 .. code-block:: yaml
 
-yahoo.com:
-  protocol: smtp      # smtp is assumed
-  server: smtp.mail.yahoo.com
-  port: 587
-  security: STARTTLS
+    yahoo.com:
+      protocol: smtp      # smtp is assumed
+      server: smtp.mail.yahoo.com
+      port: 587
+      security: STARTTLS
+
 
 protocol
     specifies the connection and authentication protocol used
