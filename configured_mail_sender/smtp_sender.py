@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from configured_mail_sender import MailSender, MailSenderException
+from configured_mail_sender.mail_sender import MailSender, MailSenderException
 from getpass import getpass
 from smtplib import SMTP_SSL, SMTPException, SMTP
 from email.mime.base import MIMEBase
@@ -164,7 +164,8 @@ class SMTPSender(MailSender):
         Note: This is a non-static method to facilitate unit tests.
         """
 
-        # Not recommended, mostly for unit tests, but use password from instantiation if specified.
+        # Not recommended, mostly for unit tests, but use password from
+        # instantiation if specified.
         pwd = self.kwargs.get("password")
         if pwd is None:
             pwd = getpass(f'Enter password for user "{self.sender}:')
@@ -179,7 +180,8 @@ class SMTPSender(MailSender):
         r_list = [r for r in r_list if r]
         receivers = ','.join(r_list)
         sender_name = self.user_credentials.get('name')
-        message['From'] = f'{sender_name} <{self.sender}>' if sender_name else self.sender
+        message['From'] = f'{sender_name} <{self.sender}>' if sender_name \
+            else self.sender
         self._send_message(self.sender, receivers, message.as_string())
 
     def _send_message(self, sender: str, receivers: str, msg_str: str) -> None:

@@ -4,7 +4,7 @@ Configured Mail Sender Documentation
 
 ``configured_mail_sender`` makes it easy for a Python script to send emails on behalf of a user
 without dealing with the details of interaction with the sending email provider.
-Your script needs to know only the sending email address. ``mail_sender`` uses configuration
+Your script needs to know only the sending email address. ``configured_mail_sender`` uses configuration
 files (system-wide or user-specific) to figure out how to communicate with the sender's
 email domain.
 
@@ -16,10 +16,10 @@ Here's a simple example:
 
 .. code-block::
 
-    from configured_mail_sender.mail_sender import mail_sender
+    import configured_mail_sender
     from email.mime.text import MIMEText
 
-    sender = mail_sender('sending-email@somedomain.com')
+    sender = configured_mail_sender.create_sender('sending-email@somedomain.com')
     msg = MIMEText("This is a test message", 'plain')
     msg['Subject'] = 'Success!'
     msg['To'] = 'receiver@gmail.com'
@@ -37,22 +37,22 @@ documentation for details.
 Everything needed to communicate with the sender's email service comes
 from system and/or user configuration files. Your application doesn't need to deal with that.
 
-Configuring to send emails
+Configuring to Send Emails
 --------------------------
 ``configured_mail_sender`` uses two sets of configuration files to
 set up communication with the sending email address.
 
 ``mailsender_domains.yml`` files tell it how to interact with the servers
-that handle outgoing emails for a given email domain (the part after the '@'
+that handle outgoing emails for the email domain (the part after the '@'
 in the sending email address).
 
-A ``mailsender_creds.yml`` file has whatever is needed to convince the server that you're
+The user's ``mailsender_creds.yml`` file has whatever is needed to convince the server that the user is
 allowed to send emails from that email address.
 
 Outgoing Email Domains
 ~~~~~~~~~~~~~~~~~~~~~~
 
-``mail_sender`` uses
+``configured_mail_sender`` uses
 `combine-settings <https://pypi.org/project/combine-settings/>`_
 to build outgoing email domain configurations from one or more
 ``mailsender_domains.yml`` files.
@@ -60,12 +60,12 @@ See the documentation for ``combine-settings`` for just how this works,
 but in short it looks for ``mailsender_domains.yml`` files from:
 
 * built-in defaults from ``configured_mail_sender``
-* global installation-specific settings
-* settings from the Python virtual environment
+* site-specific global settings
 * user-specific settings
-* specific settings from parameters in the ``combine-settings`` call.
+* settings from the Python virtual environment
+* specific settings from parameters in the ``combine_settings()`` call.
 
-``configured_mail_sender.mail_sender()`` passes any relevant
+``configured_mail_sender.create_sender()`` passes any relevant
 parameters through to ``combine-settings``.
 
 The assembled domain configuration has a configuration for each
@@ -151,7 +151,7 @@ from that email address.
 
 The credentials come from the first of:
 
-* A file given in the ``creds_file`` parameter to the ``mailsender()`` call.
+* A file given in the ``creds_file`` parameter to the ``mail_sender()`` call.
 * A file named in the ``MAILSENDER_CREDS`` environment variable.
 * A file in the os-appropriate user directory as determined by
   platformdirs_ [#pdir]_ as follows:
@@ -188,11 +188,19 @@ password
     This is the password to connect to the SMTP server for this sender.
     If the SMTP server doesn't require a password, you probably shouldn't
     be using it. If no password is provided, ``mail_sender`` will prompt
-    the user for one, and if the connection succeeds it will update the
+    the user for one, and *if the connection succeeds* it will update the
     ``mailsender_creds.yml`` to include it.
 
+    **Note:** Some systems (Yahoo and Google are a couple)
+    allow creation of single-use passwords.
+    These are special passwords, each expected to be used in only one place,
+    that are different from the user's normal login password. If a single-use
+    password is compromised it can be deactivated and replaced; the user's
+    other passwords can be assumed to be safe. We *strongly* recommend
+    using single-use passwords with ``configured_mail_sender`` when possible.
+
 Creating a MailSender
-=====================
+---------------------
 Once you've set up all of the configuration files you're all set to
 start sending emails. See the code example at the beginning of this
 document But there are a few other parameters to
@@ -216,10 +224,10 @@ password, userid
     given as explicit parameters.
 
 
-Footnotes
----------
+Notes
+-----
 
-.. [#pdir] Note: At least on Macintosh, earlier versions of ``platformdirs``
+.. [#pdir] At least on Macintosh, earlier versions of ``platformdirs``
            had a different location for application configuration files.
            If you change versions of the package you might find that
            you have to move your configuration files.
