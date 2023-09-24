@@ -16,7 +16,7 @@ Here's a simple example:
 
 .. code-block::
 
-    from configured_mail_sender.mail_sender import mail_sender
+    from configured_mail_sender import mail_sender
     from email.mime.text import MIMEText
 
     sender = mail_sender('sending-email@somedomain.com')
@@ -37,7 +37,7 @@ documentation for details.
 Everything needed to communicate with the sender's email service comes
 from system and/or user configuration files. Your application doesn't need to deal with that.
 
-Configuring to send emails
+Configuring to Send Emails
 --------------------------
 ``configured_mail_sender`` uses two sets of configuration files to
 set up communication with the sending email address.
