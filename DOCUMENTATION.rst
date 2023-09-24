@@ -1,6 +1,6 @@
-=============
+====================================
 Configured Mail Sender Documentation
-=============
+====================================
 
 ``configured_mail_sender`` makes it easy for a Python script to send emails on behalf of a user
 without dealing with the details of interaction with the sending email provider.
@@ -38,7 +38,7 @@ Everything needed to communicate with the sender's email service comes
 from system and/or user configuration files. Your application doesn't need to deal with that.
 
 Configuring to send emails
----------------
+--------------------------
 ``configured_mail_sender`` uses two sets of configuration files to
 set up communication with the sending email address.
 
@@ -50,11 +50,11 @@ A ``mailsender_creds.yml`` file has whatever is needed to convince the server th
 allowed to send emails from that email address.
 
 Outgoing Email Domains
-~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 ``mail_sender`` uses
 `combine-settings <https://pypi.org/project/combine-settings/>`_
-to build outgoing email domain cofigurations from one or more
+to build outgoing email domain configurations from one or more
 ``mailsender_domains.yml`` files.
 See the documentation for ``combine-settings`` for just how this works,
 but in short it looks for ``mailsender_domains.yml`` files from:
@@ -87,7 +87,7 @@ protocol
     a custom extension of the abstract base ``MailSender`` class you
     can put the class path of that class here as ``protocol``. (The
     ``configured_mail_sender`` unit tests use this feature if you want to
-    seen how that works.) The remaining settings here apply only to the
+    see how that works.) The remaining settings here apply only to the
     SMTP protocol.
 
 server
@@ -141,7 +141,7 @@ Others can be easily added in your site or user ``mailsender_domains.yml`` file.
 
 
 User Credentials
-~~~~~~~~
+~~~~~~~~~~~~~~~~
 The credentials a user needs to send emails
 are stored in the user's ``mailsender_creds.yml`` file.
 Unlike ``mailsender_domains.yml``, each user has their own, private
@@ -154,14 +154,16 @@ The credentials come from the first of:
 * A file given in the ``creds_file`` parameter to the ``mailsender()`` call.
 * A file named in the ``MAILSENDER_CREDS`` environment variable.
 * A file in the os-appropriate user directory as determined by
-  `platformdirs <https://pypi.org/project/platformdirs/>`_ as follows:
+  platformdirs_ [#pdir]_ as follows:
+
+.. _platformdirs: https://pypi.org/project/platformdirs/
 
 .. code-block::
 
     import platformdirs
     dir = platformdirs.user_config_path('MailSender')
 
-Please consult `platformdirs <https://pypi.org/project/platformdirs/>`_
+Please consult the platformdirs_ documentation
 to see how that works for your environment.
 Because it contains sensitive information the ``mailsender_creds.yml`` file
 should be readable only by the user, but should be writable by the user
@@ -213,3 +215,11 @@ password, userid
     Not recommended, but the user's userid and/or password can be
     given as explicit parameters.
 
+
+Footnotes
+---------
+
+.. [#pdir] Note: At least on Macintosh, earlier versions of ``platformdirs``
+           had a different location for application configuration files.
+           If you change versions of the package you might find that
+           you have to move your configuration files.

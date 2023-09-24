@@ -3,7 +3,7 @@ from os import path
 import unittest
 from email.mime.base import MIMEBase
 
-from configured_mail_sender.mail_sender import MailSender,\
+from configured_mail_sender import MailSender,\
     mail_sender, MailSenderUnsupportedException, MailSenderException
 from unittest import TestCase
 
@@ -41,8 +41,7 @@ class Test(TestCase):
     def test_no_gmail(self):
         """Make sure attempt to use gmail protocol fails as expected"""
         self.assertRaises(MailSenderException,
-                          lambda: mail_sender("foo@gmail.none.test",
-                                              overrides=CONF_FILE))
+                          lambda: mail_sender("foo@gmail.none.test", overrides=CONF_FILE))
 
     def test_bad_module(self):
         self.assertRaises(MailSenderException,

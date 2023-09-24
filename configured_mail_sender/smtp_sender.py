@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from configured_mail_sender.mail_sender import MailSender, MailSenderException
+from configured_mail_sender import MailSender, MailSenderException
 from getpass import getpass
 from smtplib import SMTP_SSL, SMTPException, SMTP
 from email.mime.base import MIMEBase
@@ -42,7 +42,7 @@ is given, SSL on port 465 is used.
 
 
 class SecurityProtocol(Enum):
-    NONE = 25   # Is this really supported
+    NONE = 25  # Is this really supported
     SSL = 465
     STARTTLS = 587
 
@@ -113,7 +113,7 @@ class SMTPSender(MailSender):
         self.smtp = self._create_server(host=self.server, timeout=50, port=self.port)
 
         self.userid = self.kwargs.get('userid',
-                                 self.user_credentials.get('userid', self.sender))
+                                      self.user_credentials.get('userid', self.sender))
         try:
             self.smtp.login(self.userid, self.password)
         except SMTPException as e:

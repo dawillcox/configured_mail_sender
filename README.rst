@@ -1,13 +1,13 @@
-===========
+======================
 Configured Mail Sender
-===========
+======================
 
 Overview
 --------------
 There are multitudinous Python packages for sending emails with widely
 varying interfaces. Some concentrate on constructing the email message,
 others concentrate on the delivery. But virtually all require the caller to
-have explicit knowledge of `how` the email will be delivered. Typically the
+have explicit knowledge of *how* the email will be delivered. Typically the
 caller needs to know at least:
 
 * The address and port for the SMTP server. (The fact that servers
@@ -46,9 +46,9 @@ to send them.
 
 Here's a simple example:
 
-.. code-block:: python
+.. code-block::
 
-    from configured_mail_sender.mail_sender import mail_sender
+    from configured_mail_sender import mail_sender
     from email.mime.text import MIMEText
 
     sender = mail_sender('sending-email@somedomain.com')
@@ -61,5 +61,5 @@ Here's a simple example:
     sender.send_message(msg)
 
 
-See the `DOCUMENTATION <./DOCUMENTATION.rst>`_ for details on how to
+See the `DOCUMENTATION <https://github.com/dawillcox/configured_mail_sender/blob/main/DOCUMENTATION.rst>`_ for details on how to
 configure ``configured_mail_sender``.

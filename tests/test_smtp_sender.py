@@ -1,7 +1,7 @@
 import unittest
 import os
 import yaml
-from configured_mail_sender.mail_sender import mail_sender, MailSenderException
+from configured_mail_sender import mail_sender, MailSenderException
 from configured_mail_sender.smtp_sender import (SMTPSender,
                                                 SecurityProtocol, _get_port_security)
 from unittest import TestCase
@@ -70,9 +70,7 @@ class TestInvokeSMTP(TestCase):
 
 class TestBasic(TestCase):
     def setUp(self) -> None:
-        self.sender = mail_sender(SENDER,
-                                  overrides=DOMAIN_FILE,
-                                  password=SENDER_PASSWORD)
+        self.sender = mail_sender(SENDER, overrides=DOMAIN_FILE, password=SENDER_PASSWORD)
         with open(DOMAIN_FILE, 'r') as f:
             self.service_params = yaml.safe_load(f).get(SERVICE_DOMAIN)
 
@@ -135,9 +133,7 @@ class TestNewPassword(TestCase):
     # If no password is available, a credentials file should be created
     def test_new_password(self):
         """ Verify credentials file update when prompted for a new password. """
-        sender = mail_sender(self.other_sender,
-                             overrides=DOMAIN_FILE,
-                             creds_file=self.user_password_file)
+        sender = mail_sender(self.other_sender, overrides=DOMAIN_FILE, creds_file=self.user_password_file)
         self.assertTrue(os.path.exists(self.user_password_file),
                         'creds file should be created')
         with open(self.user_password_file, 'r') as f:
@@ -148,18 +144,13 @@ class TestNewPassword(TestCase):
 
     def test_prev_password(self):
         """ Verifying that password in the cred file is correctly retrieved."""
-        sender = mail_sender(PREVIOUS_SENDER,
-                             overrides=DOMAIN_FILE,
-                             creds_file=self.test_cred_file)
+        sender = mail_sender(PREVIOUS_SENDER, overrides=DOMAIN_FILE, creds_file=self.test_cred_file)
         self.assertEqual(sender.password, PREVIOUS_PASSWORD)
 
     def test_explicit_password(self):
         """ Verify that explicit password overrides configuration file """
         test_pwd = "plover"
-        sender = mail_sender(PREVIOUS_SENDER,
-                             overrides=DOMAIN_FILE,
-                             password=test_pwd,
-                             creds_file=self.test_cred_file)
+        sender = mail_sender(PREVIOUS_SENDER, overrides=DOMAIN_FILE, password=test_pwd, creds_file=self.test_cred_file)
         self.assertEqual(sender.password, test_pwd)
 
 

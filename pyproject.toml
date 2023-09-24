@@ -7,7 +7,7 @@ requires = ['setuptools>=61.0',
 build-backend = 'setuptools.build_meta'
 
 [project]
-name = 'configured_mail_sender_daw30410'
+name = 'configured_mail_sender'
 version = '0.0.1'
 authors = [
   { name='David Willcox', email='daw30410@yahoo.com' },

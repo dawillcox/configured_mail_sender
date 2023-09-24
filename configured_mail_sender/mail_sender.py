@@ -1,10 +1,11 @@
 import os
 import platformdirs
 import yaml
+import copy
 from abc import abstractmethod
 from email.mime.base import MIMEBase
 from os import environ, path
-from typing import Union, Mapping
+from typing import Union, MutableMapping
 from combine_settings import load_config
 from filelock import FileLock
 
@@ -37,7 +38,6 @@ _BUILTIN_DOMAINS = {
 CONFIG_FILE_NAME = 'mailsender_domains.yml'
 CREDS_FILE_NAME = 'mailsender_creds.yml'
 CONFIG_APPLICATION_NAME = 'MailSender'
-# BUILTIN_CONFIG_PATH = _BUILTIN_DOMAINS
 DEFAULT_CREDS_FILE = path.join(platformdirs.user_config_dir(CONFIG_APPLICATION_NAME),
                                CREDS_FILE_NAME)
 
@@ -99,7 +99,7 @@ class MailSender:
         """
         return self
 
-    def _read_creds_file(self) -> Mapping:
+    def _read_creds_file(self) -> MutableMapping:
         """
         Return current content of creds file.
         :return: Content of creds file
@@ -131,17 +131,17 @@ class MailSender:
                 # Write the new file, then replace the old file, to avoid damaging
                 # the old file if something breaks in the middle.
                 fd = os.open(temp_file, (os.O_CREAT | os.O_TRUNC | os.O_WRONLY), 0o600)
-                try:
-                    os.write(fd, bytes(yaml.safe_dump(current_creds), 'utf-8'))
-                except Exception as e:
-                    raise MailSenderException(e,
-                                              f"Problem writing new credentials "
-                                              f"{temp_file}")
-                finally:
-                    os.close(fd)
-                os.replace(temp_file, self.user_cred_file)
             except IOError as e:
                 raise MailSenderException(e, f"Can't write {self.user_cred_file}")
+
+            try:
+                os.write(fd, bytes(yaml.safe_dump(current_creds), 'utf-8'))
+                os.replace(temp_file, self.user_cred_file)
+            except Exception as e:
+                raise MailSenderException(e,
+                                          f"Problem writing new credentials {temp_file}")
+            finally:
+                os.close(fd)
 
     @abstractmethod
     def send_message(self, message: MIMEBase) -> None:
@@ -160,8 +160,9 @@ class MailSender:
         :return: Name of service
         """
 
+
 def mail_sender(sender: str,
-                base_config: Union[dict, str] = _BUILTIN_DOMAINS,
+                base_config: Union[dict, str] = copy.deepcopy(_BUILTIN_DOMAINS),
                 overrides: Union[dict, str] = None,
                 **kwargs) -> MailSender:
     """
