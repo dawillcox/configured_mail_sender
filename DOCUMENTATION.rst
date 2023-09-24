@@ -192,7 +192,7 @@ password
     ``mailsender_creds.yml`` to include it.
 
 Creating a MailSender
-=====================
+---------------------
 Once you've set up all of the configuration files you're all set to
 start sending emails. See the code example at the beginning of this
 document But there are a few other parameters to
