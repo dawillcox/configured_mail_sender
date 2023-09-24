@@ -1,0 +1,20 @@
+prev_sender@smtp.test:
+  password: test?pwd9
+
+user_prev_sender@smtp.test.yml:
+  password: prevpwd
+
+#gmail_test@gmail.test:
+#  applications:
+#    validapp:
+#      valid: True
+#      refresh_token: False
+#      expired: False
+#      tag: validaAppTag
+#
+#    refreshapp:
+#      valid: False
+#      refresh_token: True
+#      expired: True
+#      tag: refreshappTag
+

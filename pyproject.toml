@@ -1,0 +1,36 @@
+[build-system]
+requires = ['setuptools>=61.0',
+            'platformdirs>=3.10.0',
+            'filelock>=3.8.0',
+            'PyYAML>=6.0',
+            ]
+build-backend = 'setuptools.build_meta'
+
+[project]
+name = 'configured_mail_sender_daw30410'
+version = '0.0.1'
+authors = [
+  { name='David Willcox', email='daw30410@yahoo.com' },
+]
+description = 'Simplfy sending email to arbitrary domains'
+readme = 'README.rst'
+license = { file='LICENSE' }
+requires-python = '>=3.7'
+classifiers = [
+    'Programming Language :: Python :: 3',
+    'License :: OSI Approved :: MIT License',
+    'Operating System :: OS Independent',
+    'Intended Audience :: Developers',
+    'Natural Language :: English',
+]
+dependencies = [
+                'combine_settings>=1.0.1',
+		'platformdirs>=3.10.0',
+                'filelock>=3.8.0',
+                'PyYAML>=6.0',
+]
+
+[project.urls]
+'Homepage' = 'https://github.com/dawillcox/configured_mail_sender'
+'Bug Tracker' = 'https://github.com/dawillcox/configured_mail_sender/issues'
+'Documentation' = 'https://github.com/dawillcox/configured_mail_sender/blob/main/DOCUMENTATION.rst'

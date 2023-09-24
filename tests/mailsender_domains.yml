@@ -1,0 +1,40 @@
+# Global, service-specific settings for each supported domain.
+# protocol identifies the mail protocol implementation.
+# Other settings are specific to the implementation.
+
+yahoo.com:
+    protocol: smtp      # Can be smtp or gmail. smtp is assumed
+    server: smtp.mail.yahoo.com
+    port: 587
+    security: STARTTLS  # Allowed values are SSL (normally port 465) or STARTTLS (normally port 587)
+                        # Security of NONE is defined, but untested and isn't guaranteed to work.
+    # It isn't necessary to specify both port and security. If one of the standard ports, 25, 465, or 587
+    # is given, the normal security for that port is used. If just one of the value security
+    # values is given, the standard port for that security is used. If the server uses some
+    # nonstandard port, both port and security must be given.
+    # If neither are given, port 465 and security SSL are used.
+
+aol.com:
+    protocol: smtp
+    server: smtp.aol.com
+    port: 465
+
+gmail.com:
+    protocol: smtp
+    server: smtp.gmail.com
+    port: 587
+
+outlook.com: &outlook_smtp
+    protocol: smtp
+    server: smtp-mail.outlook.com
+    port: 587
+
+hotmail.com: *outlook_smtp
+live.com: *outlook_smtp
+
+comcast.net: &comcast_smtp
+    protocol: smtp
+    server: smtp.comcast.net
+    port: 587
+xfinity.com: *comcast_smtp  # Does this exist?
+

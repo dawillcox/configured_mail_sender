@@ -1,0 +1,38 @@
+# This file tells mail_sender() how to configure a sender for
+# an email to a given email domain.
+#
+# Each domain has a protocol section specifying the main
+# email protocol. Currently 'gmail' and 'smtp' are understood.
+# Other, custom implementations can be given in the form module:class.
+# Each domain entry can have additional protocol-specific fields.
+# For example, smtp will have server and port fields telling
+# how to connect to the server.
+
+base.com:
+  protocol: tests.test_mail_sender:TestBase
+
+smtp.test:
+  protocol: tests.test_smtp_sender:TestSender
+  server: smtp.server.test
+  port: 666
+
+bad.server:
+  protocol: this.doesnt.exist:NotThere
+
+gmail.none.test:
+  protocol: gmail
+
+gmail.test:
+  protocol: tests.test_gmail_sender:GmailTester
+  applications:
+    GmailApp:
+      valid: True
+      refresh_token: False
+      expired: False
+      tag: GmailAppTag
+    default:
+      # User hasn't authenticated for this app, and verifying that this is the default application
+      valid: True
+      refresh_token: False
+      expired: False
+      tag: defaultTag
