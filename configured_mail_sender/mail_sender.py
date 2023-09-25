@@ -1,7 +1,6 @@
 import os
 import platformdirs
 import yaml
-import copy
 from abc import abstractmethod
 from email.mime.base import MIMEBase
 from os import environ, path
@@ -75,7 +74,8 @@ class MailSender:
         #   - The creds_file parameter.
         #   - The MAILSENDER_CREDS environment variable
         #   - mailsender_creds.yml in the user's standard configuration file
-        # default_file = path.join(platformdirs.user_config_path(CONFIG_APPLICATION_NAME),
+        # default_file =
+        #             path.join(platformdirs.user_config_path(CONFIG_APPLICATION_NAME),
         #                          'mailsender_creds.yml')
         self.user_cred_file = kwargs.get('creds_file',
                                          environ.get('MAILSENDER_CREDS',
@@ -139,7 +139,8 @@ class MailSender:
                 os.replace(temp_file, self.user_cred_file)
             except Exception as e:
                 raise MailSenderException(e,
-                                          f"Problem writing new credentials {temp_file}")
+                                          "Problem writing new credentials" +
+                                          temp_file)
             finally:
                 os.close(fd)
 
@@ -160,11 +161,14 @@ class MailSender:
         :return: Name of service
         """
 
+# TODO: Change the following to create_sender()
+# TODO: Merge smtp_sender into here?
 
-def mail_sender(sender: str,
-                base_config: Union[dict, str] = copy.deepcopy(_BUILTIN_DOMAINS),
-                overrides: Union[dict, str] = None,
-                **kwargs) -> MailSender:
+
+def create_sender(sender: str,
+                  base_config: Union[dict, str] = None,
+                  overrides: Union[dict, str] = None,
+                  **kwargs) -> MailSender:
     """
     Create a MailSender instance to send email from the given sender from a
     given user.
@@ -178,6 +182,8 @@ def mail_sender(sender: str,
 
     if not sender:
         raise MailSenderException('sender is required')
+
+    base_config = base_config if base_config else _BUILTIN_DOMAINS
 
     # Load global configurations (service type, SMTP url and port, etc)
     domains_conf = load_config(CONFIG_FILE_NAME,
@@ -196,19 +202,19 @@ def mail_sender(sender: str,
 
     # Will add this back if/when I add gmail OAuth2 support
     # if protocol == 'gmail':
-    #     try:
-    #         from gmail_sender import gmail_sender
-    #         return gmail_sender.GmailSender(sender,
-    #                                         domain_spec=domain_spec, **kwargs).open()
-    #     except ModuleNotFoundError as e:
-    #         raise MailSenderUnsupportedException(e,
-    #                                              "mail_sender_gmail package not installed")
+    #   try:
+    #     from gmail_sender import gmail_sender
+    #     return gmail_sender.GmailSender(sender,
+    #                                     domain_spec=domain_spec, **kwargs).open()
+    #   except ModuleNotFoundError as e:
+    #     raise MailSenderUnsupportedException(e,
+    #                                        "mail_sender_gmail package not installed")
 
     if protocol == 'smtp':
         from configured_mail_sender import smtp_sender
         return smtp_sender.SMTPSender(sender, domain_spec=domain_spec, **kwargs).open()
 
-    if not (':' in protocol):
+    if ':' not in protocol:
         raise MailSenderException(f'No implementation specified for domain {domain}')
 
     # Maybe an explicit module:class?

@@ -60,7 +60,7 @@ See the documentation for ``combine-settings`` for just how this works,
 but in short it looks for ``mailsender_domains.yml`` files from:
 
 * built-in defaults from ``configured_mail_sender``
-* global installation-specific settings
+* site-specific global settings
 * settings from the Python virtual environment
 * user-specific settings
 * specific settings from parameters in the ``combine-settings`` call.
@@ -151,7 +151,7 @@ from that email address.
 
 The credentials come from the first of:
 
-* A file given in the ``creds_file`` parameter to the ``mailsender()`` call.
+* A file given in the ``creds_file`` parameter to the ``mail_sender()`` call.
 * A file named in the ``MAILSENDER_CREDS`` environment variable.
 * A file in the os-appropriate user directory as determined by
   platformdirs_ [#pdir]_ as follows:
@@ -188,8 +188,16 @@ password
     This is the password to connect to the SMTP server for this sender.
     If the SMTP server doesn't require a password, you probably shouldn't
     be using it. If no password is provided, ``mail_sender`` will prompt
-    the user for one, and if the connection succeeds it will update the
+    the user for one, and *if the connection succeeds* it will update the
     ``mailsender_creds.yml`` to include it.
+
+    **Note:** Some systems (Yahoo and Google are a couple)
+    allow creation of single-use passwords.
+    These are special passwords, each expected to be used in only one place,
+    that are different from the user's normal login password. If a single-use
+    password is compromised it can be deactivated and replaced; the user's
+    other passwords can be assumed to be safe. We *strongly* recommend
+    using single-use passwords with ``configured_mail_sender`` when possible.
 
 Creating a MailSender
 ---------------------
@@ -216,10 +224,10 @@ password, userid
     given as explicit parameters.
 
 
-Footnotes
----------
+Notes
+-----
 
-.. [#pdir] Note: At least on Macintosh, earlier versions of ``platformdirs``
+.. [#pdir] At least on Macintosh, earlier versions of ``platformdirs``
            had a different location for application configuration files.
            If you change versions of the package you might find that
            you have to move your configuration files.

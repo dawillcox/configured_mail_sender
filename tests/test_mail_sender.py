@@ -3,8 +3,8 @@ from os import path
 import unittest
 from email.mime.base import MIMEBase
 
-from configured_mail_sender import MailSender,\
-    mail_sender, MailSenderUnsupportedException, MailSenderException
+from configured_mail_sender.mail_sender import MailSender,\
+    create_sender, MailSenderException
 from unittest import TestCase
 
 TEST_CONFIG_DIR = path.join(path.split(__file__)[0], 'test_configs')
@@ -33,7 +33,7 @@ class TestBase(MailSender):
 class Test(TestCase):
     def test_creation(self):
         """Instantiate basic class and verify some generic settings"""
-        mailer = mail_sender(SENDER, overrides=CONF_FILE)
+        mailer = create_sender(SENDER, overrides=CONF_FILE)
 
         self.assertEqual(mailer.sender, SENDER)
         self.assertEqual(SERVICE_NAME, mailer.get_service_name())
@@ -41,19 +41,21 @@ class Test(TestCase):
     def test_no_gmail(self):
         """Make sure attempt to use gmail protocol fails as expected"""
         self.assertRaises(MailSenderException,
-                          lambda: mail_sender("foo@gmail.none.test", overrides=CONF_FILE))
+                          lambda: create_sender("foo@gmail.none.test",
+                                               overrides=CONF_FILE))
 
     def test_bad_module(self):
         self.assertRaises(MailSenderException,
-                          lambda: mail_sender('foo@bad.server', overrides=CONF_FILE))
+                          lambda: create_sender('foo@bad.server',
+                                                overrides=CONF_FILE))
 
     def test_bad_domain(self):
         self.assertRaises(MailSenderException,
-                          lambda: mail_sender("foo@nosuchdomain"))
+                          lambda: create_sender("foo@nosuchdomain"))
 
     def test_no_sender(self):
         self.assertRaises(MailSenderException,
-                          lambda: mail_sender(None))
+                          lambda: create_sender(None))
 
 
 if __name__ == '__main__':

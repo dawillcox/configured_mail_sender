@@ -1,9 +1,10 @@
 import unittest
 import os
 import yaml
-from configured_mail_sender import mail_sender, MailSenderException
+from configured_mail_sender.mail_sender import create_sender, MailSenderException
 from configured_mail_sender.smtp_sender import (SMTPSender,
-                                                SecurityProtocol, _get_port_security)
+                                                SecurityProtocol,
+                                                _get_port_security)
 from unittest import TestCase
 from smtplib import SMTP_SSL
 from email.mime.multipart import MIMEMultipart
@@ -63,14 +64,19 @@ class MockSMTPSSL(SMTP_SSL):
         self.receivers = to_addrs
         self.message = msg
 
+
 class TestInvokeSMTP(TestCase):
     def test_create(self) -> None:
         self.assertRaises(MailSenderException,
-                          lambda: mail_sender("nobody@yahoo.com", password="badpwd"))
+                          lambda: create_sender("nobody@yahoo.com",
+                                                password="badpwd"))
+
 
 class TestBasic(TestCase):
     def setUp(self) -> None:
-        self.sender = mail_sender(SENDER, overrides=DOMAIN_FILE, password=SENDER_PASSWORD)
+        self.sender = create_sender(SENDER,
+                                    overrides=DOMAIN_FILE,
+                                    password=SENDER_PASSWORD)
         with open(DOMAIN_FILE, 'r') as f:
             self.service_params = yaml.safe_load(f).get(SERVICE_DOMAIN)
 
@@ -116,7 +122,8 @@ class TestNewPassword(TestCase):
     def setUp(self) -> None:
         # Some setup, and make sure there isn't a leftover password file
         self.other_sender = f'anotherSender@{SERVICE_DOMAIN}'
-        self.user_password_file = os.path.join(CONF_BASE, f'user_{self.other_sender}.yml')
+        self.user_password_file = os.path.join(CONF_BASE,
+                                               f'user_{self.other_sender}.yml')
         self.test_cred_file = os.path.join(CONF_BASE, "test_creds.yml")
         if os.path.exists(self.user_password_file):
             os.remove(self.user_password_file)
@@ -133,7 +140,10 @@ class TestNewPassword(TestCase):
     # If no password is available, a credentials file should be created
     def test_new_password(self):
         """ Verify credentials file update when prompted for a new password. """
-        sender = mail_sender(self.other_sender, overrides=DOMAIN_FILE, creds_file=self.user_password_file)
+        sender = create_sender(self.other_sender,
+                               overrides=DOMAIN_FILE,
+                               creds_file=self.user_password_file)
+        self.assertIsNotNone(sender)
         self.assertTrue(os.path.exists(self.user_password_file),
                         'creds file should be created')
         with open(self.user_password_file, 'r') as f:
@@ -144,13 +154,18 @@ class TestNewPassword(TestCase):
 
     def test_prev_password(self):
         """ Verifying that password in the cred file is correctly retrieved."""
-        sender = mail_sender(PREVIOUS_SENDER, overrides=DOMAIN_FILE, creds_file=self.test_cred_file)
+        sender = create_sender(PREVIOUS_SENDER,
+                               overrides=DOMAIN_FILE,
+                               creds_file=self.test_cred_file)
         self.assertEqual(sender.password, PREVIOUS_PASSWORD)
 
     def test_explicit_password(self):
         """ Verify that explicit password overrides configuration file """
         test_pwd = "plover"
-        sender = mail_sender(PREVIOUS_SENDER, overrides=DOMAIN_FILE, password=test_pwd, creds_file=self.test_cred_file)
+        sender = create_sender(PREVIOUS_SENDER,
+                               overrides=DOMAIN_FILE,
+                               password=test_pwd,
+                               creds_file=self.test_cred_file)
         self.assertEqual(sender.password, test_pwd)
 
 
@@ -179,7 +194,8 @@ class TestPortSecurity(TestCase):
 
     def test_both_set(self):
         """If both port and security protocol given, believe the user"""
-        (port, security) = _get_port_security({'port': 33, 'security': SecurityProtocol.SSL.name})
+        (port, security) = _get_port_security({'port': 33,
+                                               'security': SecurityProtocol.SSL.name})
         self.assertEqual(33, port)
         self.assertEqual(SecurityProtocol.SSL.name, security.name)
 
