@@ -26,7 +26,7 @@ And, of course, they don't support more secure authentication systems like
 Google's OAuth2.
 
 With ``configured_email_sender``, the application only needs to know the sending email address.
-``configured_email_sender.mail_sender`` uses
+``configured_email_sender`` uses
 `combine-settings <https://pypi.org/project/combine-settings/>`_
 to find all it needs to deliver the mail. Public settings, e.g, SMTP
 address and port can be public for the whole site. Private information
@@ -36,7 +36,7 @@ How It Works
 -------------
 ``configured_mail_sender`` makes it easy for a Python script to send emails on behalf of a user
 without dealing with the details of interaction with the sending email provider.
-Your script needs to know only the sending email address. ``mail_sender`` uses configuration
+Your script only needs to know the sending email address. ``create_sender()`` uses configuration
 files (system-wide or user-specific) to figure out how to communicate with the sender's
 email domain.
 

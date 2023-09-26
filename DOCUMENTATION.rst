@@ -4,7 +4,7 @@ Configured Mail Sender Documentation
 
 ``configured_mail_sender`` makes it easy for a Python script to send emails on behalf of a user
 without dealing with the details of interaction with the sending email provider.
-Your script needs to know only the sending email address. ``mail_sender`` uses configuration
+Your script needs to know only the sending email address. ``configured_mail_sender`` uses configuration
 files (system-wide or user-specific) to figure out how to communicate with the sender's
 email domain.
 
@@ -43,16 +43,16 @@ Configuring to Send Emails
 set up communication with the sending email address.
 
 ``mailsender_domains.yml`` files tell it how to interact with the servers
-that handle outgoing emails for a given email domain (the part after the '@'
+that handle outgoing emails for the email domain (the part after the '@'
 in the sending email address).
 
-A ``mailsender_creds.yml`` file has whatever is needed to convince the server that you're
+The user's ``mailsender_creds.yml`` file has whatever is needed to convince the server that the user is
 allowed to send emails from that email address.
 
 Outgoing Email Domains
 ~~~~~~~~~~~~~~~~~~~~~~
 
-``mail_sender`` uses
+``configured_mail_sender`` uses
 `combine-settings <https://pypi.org/project/combine-settings/>`_
 to build outgoing email domain configurations from one or more
 ``mailsender_domains.yml`` files.
@@ -61,11 +61,11 @@ but in short it looks for ``mailsender_domains.yml`` files from:
 
 * built-in defaults from ``configured_mail_sender``
 * site-specific global settings
-* settings from the Python virtual environment
 * user-specific settings
-* specific settings from parameters in the ``combine-settings`` call.
+* settings from the Python virtual environment
+* specific settings from parameters in the ``combine_settings()`` call.
 
-``configured_mail_sender.mail_sender()`` passes any relevant
+``configured_mail_sender.create_sender()`` passes any relevant
 parameters through to ``combine-settings``.
 
 The assembled domain configuration has a configuration for each
