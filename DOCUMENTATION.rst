@@ -151,7 +151,7 @@ from that email address.
 
 The credentials come from the first of:
 
-* A file given in the ``creds_file`` parameter to the ``mail_sender()`` call.
+* A file given in the ``creds_file`` parameter to the ``create_sender()`` call.
 * A file named in the ``MAILSENDER_CREDS`` environment variable.
 * A file in the os-appropriate user directory as determined by
   platformdirs_ [#pdir]_ as follows:
@@ -204,7 +204,7 @@ Creating a MailSender
 Once you've set up all of the configuration files you're all set to
 start sending emails. See the code example at the beginning of this
 document But there are a few other parameters to
-``mail_sender()`` that power-users might want to use:
+``create_sender()`` that power-users might want to use:
 
 base_config
     This will override the builtin ``configured_mail_sender`` defaults
