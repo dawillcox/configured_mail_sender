@@ -48,10 +48,10 @@ Here's a simple example:
 
 .. code-block::
 
-    from configured_mail_sender import mail_sender
+    import configured_mail_sender
     from email.mime.text import MIMEText
 
-    sender = mail_sender('sending-email@somedomain.com')
+    sender = configured_mail_sender.create_sender('sending-email@somedomain.com')
     msg = MIMEText("This is a test message", 'plain')
     msg['Subject'] = 'Success!'
     msg['To'] = 'receiver@gmail.com'
