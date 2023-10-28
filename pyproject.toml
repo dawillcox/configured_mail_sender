@@ -8,7 +8,7 @@ build-backend = 'setuptools.build_meta'
 
 [project]
 name = 'configured_mail_sender'
-version = '1.0.0'
+version = '1.0.1'
 authors = [
   { name='David Willcox', email='daw30410@yahoo.com' },
 ]
@@ -24,10 +24,10 @@ classifiers = [
     'Natural Language :: English',
 ]
 dependencies = [
-                'combine_settings>=1.0.1',
-		'platformdirs>=3.10.0',
-                'filelock>=3.8.0',
-                'PyYAML>=6.0',
+    'combine_settings>=1.0.1',
+    'platformdirs>=3.10.0',
+    'filelock>=3.8.0',
+    'PyYAML>=6.0',
 ]
 
 [project.urls]

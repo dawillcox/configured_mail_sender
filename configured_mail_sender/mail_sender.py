@@ -77,9 +77,9 @@ class MailSender:
         # default_file =
         #             path.join(platformdirs.user_config_path(CONFIG_APPLICATION_NAME),
         #                          'mailsender_creds.yml')
-        self.user_cred_file = kwargs.get('creds_file',
-                                         environ.get('MAILSENDER_CREDS',
-                                                     DEFAULT_CREDS_FILE))
+        self.user_cred_file = kwargs.get('creds_file')
+        if not self.user_cred_file:
+            self.user_cred_file = environ.get('MAILSENDER_CREDS', DEFAULT_CREDS_FILE)
         creds_dir = path.split(self.user_cred_file)[0]
         # Make sure the credentials directory exists, even with no actual credentials.
         os.makedirs(creds_dir, mode=0o700, exist_ok=True)
@@ -161,7 +161,6 @@ class MailSender:
         :return: Name of service
         """
 
-# TODO: Change the following to create_sender()
 # TODO: Merge smtp_sender into here?
 
 
