@@ -179,9 +179,7 @@ class SMTPSender(MailSender):
         r_list = [message.get(r) for r in ['To', 'Cc', 'Bcc']]
         r_list = [r for r in r_list if r]
         receivers = ','.join(r_list)
-        sender_name = self.user_credentials.get('name')
-        message['From'] = f'{sender_name} <{self.sender}>' if sender_name \
-            else self.sender
+        message['From'] = self.sender
         self._send_message(self.sender, receivers, message.as_string())
 
     def _send_message(self, sender: str, receivers: str, msg_str: str) -> None:

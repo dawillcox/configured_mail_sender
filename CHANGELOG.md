@@ -7,3 +7,7 @@ Initial version.
 ## 1.0.1
 Fix error in finding user creds file.
 * Release: 28 Oct 2023
+
+## 1.0.2
+Ignore 'name' in user credentials. Specifying an alternate name runs afoul of spam filters.
+* Release: 29 Oct 2023

@@ -8,7 +8,7 @@ build-backend = 'setuptools.build_meta'
 
 [project]
 name = 'configured_mail_sender'
-version = '1.0.1'
+version = '1.0.2'
 authors = [
   { name='David Willcox', email='daw30410@yahoo.com' },
 ]
@@ -34,3 +34,4 @@ dependencies = [
 'Homepage' = 'https://github.com/dawillcox/configured_mail_sender'
 'Bug Tracker' = 'https://github.com/dawillcox/configured_mail_sender/issues'
 'Documentation' = 'https://github.com/dawillcox/configured_mail_sender/blob/main/DOCUMENTATION.rst'
+'Change Log' = 'https://github.com/dawillcox/configured_mail_sender/blob/main/CHANGELOG.md'
