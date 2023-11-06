@@ -2,7 +2,9 @@ from os import path
 # from unittest import TestCase
 import unittest
 from email.mime.base import MIMEBase
+import platformdirs
 
+import configured_mail_sender
 from configured_mail_sender.mail_sender import MailSender,\
     create_sender, MailSenderException
 from unittest import TestCase
@@ -56,6 +58,20 @@ class Test(TestCase):
     def test_no_sender(self):
         self.assertRaises(MailSenderException,
                           lambda: create_sender(None))
+
+    def test_domain_list(self):
+        domains = configured_mail_sender.mail_sender.known_domains()
+        self.assertEqual('smtp.mail.yahoo.com', domains.get('yahoo.com'))
+        self.assertEqual(7, len(domains))
+
+    def test_file_list(self):
+        config_files = configured_mail_sender.config_file_list()
+        self.assertEqual(path.join(platformdirs.user_config_path('MailSender'),
+                                   'mailsender_creds.yml'),
+                         config_files[-1])
+        self.assertEqual(path.join(platformdirs.site_config_path('MailSender'),
+                                   'mailsender_domains.yml'),
+                         config_files[0])
 
 
 if __name__ == '__main__':

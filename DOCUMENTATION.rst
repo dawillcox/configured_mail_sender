@@ -223,6 +223,41 @@ password, userid
     Not recommended, but the user's userid and/or password can be
     given as explicit parameters.
 
+Help Describing Configuration
+-----------------------------
+Two helper functions provide information about the current configuration.
+This information could be used as an aid for users building a configuration.
+
+.. code-block::
+
+    configured_mail_sender.known_domains(
+                  base_config: str = None,
+                  overrides: str = None) -> Dict[str, str]:
+    """
+    Return domain to server mapping for known domains
+    :param base_config: Alternate base configuration
+    :param overrides: User-specified override file
+    :return: Mapping from domain to server
+    """
+
+returns a mapping from known email domain to its SMTP server.
+
+.. code-block::
+
+    config_file_list(base_config: str = None,
+                     overrides: str = None,
+                     creds_file: str = None) -> List[str]:
+    """
+    Get configuration file list
+    :param base_config: Optional base configuration for load_config
+    :param overrides: An additional file with domain specifications
+    :param creds_file: Explicit path to user credentials file
+    :return: List of directories searched
+    """
+
+returns a list of files that will be searched for email domain
+configurations, plus the file that's expected to have user email
+credentials
 
 Notes
 -----

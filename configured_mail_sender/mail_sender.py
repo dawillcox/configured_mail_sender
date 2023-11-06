@@ -4,8 +4,8 @@ import yaml
 from abc import abstractmethod
 from email.mime.base import MIMEBase
 from os import environ, path
-from typing import Union, MutableMapping
-from combine_settings import load_config
+from typing import Union, MutableMapping, List, Dict, Mapping
+import combine_settings
 from filelock import FileLock
 
 _OUTLOOK_SERVER = {
@@ -54,8 +54,8 @@ class MailSenderUnsupportedException(MailSenderException):
 class MailSender:
     def __init__(self,
                  sender: str,
-                 domain_spec: dict,
-                 **kwargs: dict):
+                 domain_spec: Dict,
+                 **kwargs: Dict):
         """
         Generic (abstract) MailSender - Class to send email from a specified sender
         :param sender str: Email address we'll be sending as
@@ -77,9 +77,7 @@ class MailSender:
         # default_file =
         #             path.join(platformdirs.user_config_path(CONFIG_APPLICATION_NAME),
         #                          'mailsender_creds.yml')
-        self.user_cred_file = kwargs.get('creds_file')
-        if not self.user_cred_file:
-            self.user_cred_file = environ.get('MAILSENDER_CREDS', DEFAULT_CREDS_FILE)
+        self.user_cred_file = _get_user_cred_file(**kwargs)
         creds_dir = path.split(self.user_cred_file)[0]
         # Make sure the credentials directory exists, even with no actual credentials.
         os.makedirs(creds_dir, mode=0o700, exist_ok=True)
@@ -161,12 +159,13 @@ class MailSender:
         :return: Name of service
         """
 
+
 # TODO: Merge smtp_sender into here?
 
 
 def create_sender(sender: str,
-                  base_config: Union[dict, str] = None,
-                  overrides: Union[dict, str] = None,
+                  base_config: Union[Dict, str] = None,
+                  overrides: Union[Dict, str] = None,
                   **kwargs) -> MailSender:
     """
     Create a MailSender instance to send email from the given sender from a
@@ -182,13 +181,15 @@ def create_sender(sender: str,
     if not sender:
         raise MailSenderException('sender is required')
 
-    base_config = base_config if base_config else _BUILTIN_DOMAINS
+    # Get server configurations (service type, SMTP url and port, etc)
+    domains_conf = _get_domain_conf(base_config=base_config,
+                                   overrides=overrides)
 
-    # Load global configurations (service type, SMTP url and port, etc)
-    domains_conf = load_config(CONFIG_FILE_NAME,
-                               base_config=base_config,
-                               application=CONFIG_APPLICATION_NAME,
-                               overrides=overrides)
+    # # Load global configurations (service type, SMTP url and port, etc)
+    # domains_conf = combine_settings.load_config(CONFIG_FILE_NAME,
+    #                                             base_config=base_config,
+    #                                             application=CONFIG_APPLICATION_NAME,
+    #                                             overrides=overrides)
 
     (addr, domain) = sender.split('@', 2)
     domain_spec = domains_conf.get(domain)
@@ -231,6 +232,66 @@ def create_sender(sender: str,
         raise MailSenderUnsupportedException(e,
                                              f'{module_}:{class_} '
                                              f'for email domain {domain} unknown)')
+
+
+def _get_user_cred_file(creds_file=None,
+                        **kwargs) -> str:
+    """
+    Return path to user credentials file
+    :param creds_file: User-specified file
+    :return: Creds file
+    """
+    if not creds_file:
+        creds_file = environ.get('MAILSENDER_CREDS', DEFAULT_CREDS_FILE)
+    return creds_file
+
+
+def config_file_list(base_config: str = None,
+                     overrides: str = None,
+                     creds_file: str = None) -> List[str]:
+    """
+    Get configuration file list
+    :param base_config: Optional base configuration for load_config
+    :param overrides: An additional file with domain specifications
+    :param creds_file: Explicit path to user credentials file
+    :return: List of directories searched
+    """
+    file_list = combine_settings.config_file_list(
+        CONFIG_FILE_NAME,
+        base_config=base_config,
+        application=CONFIG_APPLICATION_NAME,
+        overrides=overrides)
+
+    file_list.append(_get_user_cred_file(creds_file))
+    return file_list
+
+
+def _get_domain_conf(base_config: Union[str, Dict] = None,
+                     overrides: Union[str, Dict] = None) -> Mapping[str, Dict]:
+
+    base_config = base_config if base_config else _BUILTIN_DOMAINS
+    # Load global configurations (service type, SMTP url and port, etc)
+    return combine_settings.load_config(CONFIG_FILE_NAME,
+                                        base_config=base_config,
+                                        application=CONFIG_APPLICATION_NAME,
+                                        overrides=overrides)
+
+
+def known_domains(base_config: str = None,
+                  overrides: str = None) -> Dict[str, str]:
+    """
+    Return domain to server mapping for known domains
+    :param base_config: Alternate base configuration
+    :param overrides: User-specified override file
+    :return: Mapping from domain to server
+    """
+    domains_conf = _get_domain_conf(base_config=base_config,
+                                    overrides=overrides)
+    ret = {}
+    for domain, params in domains_conf.items():
+        protocol = params.get('protocol', 'smtp')
+        ret[domain] = params.get('server') if protocol == 'smtp' else protocol
+    return ret
 
 
 if __name__ == '__main__':

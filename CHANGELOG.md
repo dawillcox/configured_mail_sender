@@ -11,3 +11,8 @@ Fix error in finding user creds file.
 ## 1.0.2
 Ignore 'name' in user credentials. Specifying an alternate name runs afoul of spam filters.
 * Release: 29 Oct 2023
+
+## 1.1.0 
+Adding config_file_list() and known_domains().
+* Release: 6 Nov 2023
+

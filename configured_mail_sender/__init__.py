@@ -1,4 +1,5 @@
-from .mail_sender import create_sender, MailSenderException, MailSender
+from .mail_sender import (create_sender, MailSenderException, MailSender,
+                          known_domains, config_file_list)
 
 # The following is a total hack. If anyone has a better solution, please share.
 #
@@ -14,6 +15,8 @@ if 0:
         create_sender("foo")
         MailSender('x')
     except MailSenderException:
-        pass
+        known_domains()
+        config_file_list()
+
 
 
