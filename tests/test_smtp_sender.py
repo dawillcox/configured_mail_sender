@@ -108,7 +108,7 @@ class TestBasic(TestCase):
         smtp = self.sender.smtp
         self.assertEqual(smtp.sender, SENDER)
         self.assertEqual(smtp.message, msg.as_string())
-        receivers = set(smtp.receivers.split(','))
+        receivers = set(smtp.receivers)
         for rs in [test_to, test_bcc, test_cc]:
             rs = rs.split(',')
             for r in rs:

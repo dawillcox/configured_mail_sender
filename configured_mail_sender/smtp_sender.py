@@ -189,7 +189,7 @@ class SMTPSender(MailSender):
         :param receivers: Comma-separated list of receivers
         :param msg_str: Message as encoded string
         """
-        self.smtp.sendmail(sender, receivers, msg_str)
+        self.smtp.sendmail(sender, receivers.split(','), msg_str)
 
     def get_service_name(self) -> str:
         return 'smtp'
